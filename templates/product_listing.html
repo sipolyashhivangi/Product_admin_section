@@ -1,0 +1,68 @@
+ <h2>Listing</h2>
+
+<div ng-controller="product_form_controller"  id="main">
+<table  id="keywords" style=
+"background-color:white; margin-left:124px; width:600px" cellspacing="0" cellpadding="0" border='1'>
+	<tr>
+     <th><a href="" ng-click="reverse=!reverse;order('id', reverse)">ID</a></th>
+        <th>Name</th>
+		
+		<th>Description</th>
+		<th>Price</th>
+		<th>Image</th>
+		<th>Action</th>
+	</tr>
+   
+    <tr dir-paginate="data in lists |orderBy:sortKey:reverse|filter:search|itemsPerPage:3">
+	  <td>{{ data.id }}</td>
+      <td>{{ data.pname }}</td>
+      <td>{{ data.pdiscription }}</td>
+	  <td>{{  data.price }}</td>
+	  
+	  <td ng-repeat="datafile in data.file" style="height:50px; width:50px;">
+	  
+	  <img src="http://172.16.10.22/~ssipolya/Angular Js/Product App/img/{{  datafile }}">{{  datafile }}
+	  
+	 </td>
+	 <td><a ng-href="#/edit_product/{{ data.id }}">Edit</a> | <a href="" ng-click='prod_delete(data.id)'>Delete</a></td>
+   </tr>
+  
+</table>
+<div align="center">
+	<dir-pagination-controls
+			max-size="5"
+			direction-links="true"
+			boundary-links="true" >
+		</dir-pagination-controls>
+
+
+</div>
+</div>
+
+
+</div>
+</div>
+<script type="text/javascript">
+$(function(){
+  $('#keywords').tablesorter(); 
+});
+</script>
+<style>
+.sort-icon {
+    font-size: 9px;
+    margin-left: 5px;
+}
+
+th {
+    cursor:pointer;
+}
+img {
+    border: 0;
+    height: 121px;
+    width: 160px;
+}
+table {
+    background-color: transparent;
+    margin-left: 84px;
+}
+</style>

@@ -1,0 +1,76 @@
+
+var app = angular.module("product_app", ['ngRoute']);
+app.config(['$routeProvider', function($routeProvider) {
+	$routeProvider
+	.when('/',
+	{
+		templateUrl : 'templates/product_form.html',
+		controller : 'product_form_controller'
+	})
+	.when('/add_product',
+	{
+		templateUrl : 'templates/product_form.html',
+		controller : 'product_form_controller'
+	})
+	.when('/product_listing',
+	{
+		templateUrl : 'templates/product_listing.html',
+		controller : 'product_listing_controller'
+	})
+}]);
+app.controller("product_form_controller",function($scope, $http)
+{
+	$scope.stepsModel = [];
+	   $scope.path1 = [];
+
+		$scope.imageUpload = function(event){
+         var files = event.target.files; //FileList object
+    	console.log(files);
+		 	
+  $scope.file = [];
+angular.forEach(files ,function(value, key){
+
+	$scope.file.push(value.name);
+	}, $scope.file);
+		 
+         for (var i = 0; i < files.length; i++) {
+             var file = files[i];
+			  
+                 var reader = new FileReader();
+                 reader.onload = $scope.imageIsLoaded; 
+                 var path=reader.readAsDataURL(file);
+				  
+         }
+		
+    }
+
+    $scope.imageIsLoaded = function(e){
+        $scope.$apply(function() {
+            $scope.stepsModel.push(e.target.result);
+			$scope.path1.push(e.target.result);
+			
+        });
+    }
+	$scope.url='api/submit.php';
+	$scope.formsubmit = function(isValid) {
+		if (isValid) {
+			$http.post($scope.url,{
+			"pname": $scope.pname, 
+			"pdiscription":$scope.pdiscription,
+			"price":$scope.price,
+			"file":$scope.file,
+			"path":$scope.path1
+			}).success(function(data,status){
+				console.log(data);
+				$scope.data=data;
+				$scope.status=status;
+				location.href="#/product_listing";
+			});
+		}
+	}
+});
+ app.controller('product_listing_controller', function($scope, $http, $filter) {
+    $http.get("http://172.16.10.22/~ssipolya/Angular Js/Product App/api/getListing.php")
+    .success(function(response) {$scope.lists = response;});
+
+  });
